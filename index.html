@@ -8,8 +8,9 @@
     <meta name="description" content="Track swimming goals, progress, and personal bests.">
 
     <link rel="icon" href="assets/favicon.ico">
-
     <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#071522">
 
     <link rel="stylesheet" href="style.css">
 
@@ -39,7 +40,7 @@
         <h2>Current Event</h2>
 
         <select id="eventSelector">
-            <option>50 Fly</option>
+            <option value="50 Fly">50 Fly</option>
         </select>
 
         <div class="big-number" id="currentPB">
@@ -57,11 +58,12 @@
             No goal set
         </div>
 
+        <br>
+
         <button id="newGoal">
             Set Goal
         </button>
     </div>
-
 
 </section>
 
@@ -88,15 +90,31 @@
 
 <section class="actions">
 
-<button id="importButton">
-    Import SwimCloud
-</button>
+    <button id="importButton">
+        Import SwimCloud
+    </button>
 
-<button id="addSwimButton">
-    Add Swim
-</button>
+    <button id="addSwimButton">
+        Add Swim
+    </button>
+
+    <button id="exportButton">
+        Export Backup
+    </button>
+
+    <button id="importBackupButton">
+        Restore Backup
+    </button>
 
 </section>
+
+
+<input 
+    type="file"
+    id="backupInput"
+    accept=".json"
+    hidden
+>
 
 
 </main>
@@ -105,15 +123,24 @@
 <div id="modalContainer"></div>
 
 
+<!-- Core helpers -->
+<script src="js/utils.js"></script>
+
+<!-- Data -->
 <script src="js/storage.js"></script>
+
+<!-- Features -->
 <script src="js/parser.js"></script>
 <script src="js/events.js"></script>
 <script src="js/goals.js"></script>
 <script src="js/charts.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/importExport.js"></script>
+
+<!-- Interface -->
 <script src="js/ui.js"></script>
 
+<!-- Startup -->
 <script src="app.js"></script>
 
 </body>
