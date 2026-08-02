@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Lane9</title>
+    <meta name="description" content="Track swimming goals, progress, and personal bests.">
+
+    <link rel="icon" href="assets/favicon.ico">
+
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="top-bar">
+    <div class="brand">
+        <img src="assets/logo.png" alt="Lane9 Logo">
+        <h1>Lane9</h1>
+    </div>
+
+    <button id="themeToggle" class="icon-button">
+        🌙
+    </button>
+</header>
+
+
+<main>
+
+<section class="dashboard">
+
+    <div class="card">
+        <h2>Current Event</h2>
+
+        <select id="eventSelector">
+            <option>50 Fly</option>
+        </select>
+
+        <div class="big-number" id="currentPB">
+            --
+        </div>
+
+        <p>Personal Best</p>
+    </div>
+
+
+    <div class="card">
+        <h2>Goal</h2>
+
+        <div id="goalDisplay">
+            No goal set
+        </div>
+
+        <button id="newGoal">
+            Set Goal
+        </button>
+    </div>
+
+
+</section>
+
+
+<section class="card graph-card">
+
+    <h2>Progress</h2>
+
+    <canvas id="progressChart"></canvas>
+
+</section>
+
+
+<section class="card">
+
+    <h2>Recent Swims</h2>
+
+    <div id="swimList">
+        <p>No swims added yet.</p>
+    </div>
+
+</section>
+
+
+<section class="actions">
+
+<button id="importButton">
+    Import SwimCloud
+</button>
+
+<button id="addSwimButton">
+    Add Swim
+</button>
+
+</section>
+
+
+</main>
+
+
+<div id="modalContainer"></div>
+
+
+<script src="js/storage.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/events.js"></script>
+<script src="js/goals.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/importExport.js"></script>
+<script src="js/ui.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
