@@ -1,73 +1,68 @@
+document.addEventListener("DOMContentLoaded", () => {
+    StorageManager.load();
 
-/*
-    Lane9 Main Application
-*/
+    populateEvents();
+    setupButtons();
+    UI.render();
+});
 
+function populateEvents() {
+    const selector = document.getElementById("eventSelector");
+    if (!selector) return;
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+    const events = EventManager.getEvents();
+    const current = EventManager.getCurrent();
 
-        console.log("Lane9 loaded");
+    selector.innerHTML = events.map(event => `
+        <option value="${event}" ${event === current ? "selected" : ""}>
+            ${event}
+        </option>
+    `).join("");
 
+    selector.onchange = () => {
+        EventManager.setCurrent(selector.value);
+        UI.render();
+    };
+}
 
-        if(window.StorageManager){
-
-            StorageManager.load();
-
-        }
-
-
-        UI?.render();
-
-
-        Charts?.initialize();
-
-
-        setupButtons();
-
-    }
-);
-
-
-
-function setupButtons(){
-
-    const theme =
-        document.getElementById("themeToggle");
-
-
-    theme.onclick = () => {
-
+function setupButtons() {
+    document.getElementById("themeToggle").onclick = () => {
         document.body.classList.toggle("light");
-
     };
 
-
-    document
-    .getElementById("importButton")
-    .onclick = () => {
-
+    document.getElementById("importButton").onclick = () => {
         UI.openImport();
-
     };
 
-
-    document
-    .getElementById("addSwimButton")
-    .onclick = () => {
-
+    document.getElementById("addSwimButton").onclick = () => {
         UI.openAddSwim();
-
     };
 
-
-    document
-    .getElementById("newGoal")
-    .onclick = () => {
-
+    document.getElementById("newGoal").onclick = () => {
         UI.openGoal();
-
     };
 
+    document.getElementById("exportButton").onclick = () => {
+        ImportExport.download();
+    };
+
+    document.getElementById("importBackupButton").onclick = () => {
+        document.getElementById("backupInput").click();
+    };
+
+    document.getElementById("backupInput").onchange = async (event) => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const success = await ImportExport.upload(file);
+
+        if (success) {
+            populateEvents();
+            UI.render();
+            alert("Backup restored!");
+        } else {
+            alert("Invalid backup file.");
+        }
+    };
 }
