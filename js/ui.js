@@ -13,7 +13,7 @@ const UI = {
         const best = Stats.getBest();
 
         element.textContent = best
-            ? best.time.toFixed(2)
+            ? Utils.formatTime(best.time)
             : "--";
     },
 
@@ -24,7 +24,7 @@ const UI = {
         const goal = GoalManager.get();
 
         if (!goal) {
-            element.textContent = "No goal set";
+            element.innerHTML = "No goal set";
             return;
         }
 
@@ -32,12 +32,18 @@ const UI = {
             EventManager.getCurrent()
         );
 
+        const remaining = GoalManager.getDaysRemaining(
+            EventManager.getCurrent()
+        );
+
         element.innerHTML = `
-            <strong>${goal.time.toFixed(2)}</strong>
+            <strong>${Utils.formatTime(goal.time)}</strong>
             <br>
-            Target date: ${goal.date}
+            Deadline: ${Utils.formatDate(goal.date)}
             <br>
             Progress: ${progress ?? 0}%
+            <br>
+            ${remaining > 0 ? `${remaining} days left` : "Deadline passed"}
         `;
     },
 
@@ -45,26 +51,25 @@ const UI = {
         const list = document.getElementById("swimList");
         if (!list) return;
 
-        const swims = EventManager.getSwims();
+        const swims = EventManager.getSwims()
+            .slice()
+            .reverse();
 
         if (!swims.length) {
             list.innerHTML = "<p>No swims added yet.</p>";
             return;
         }
 
-        list.innerHTML = swims
-            .slice()
-            .reverse()
-            .map(swim => `
-                <div class="swim">
-                    <strong>${swim.time.toFixed(2)}</strong>
-                    <br>
-                    ${swim.meet}
-                    <br>
-                    <small>${swim.date}</small>
-                </div>
-            `)
-            .join("");
+        list.innerHTML = swims.map(swim => `
+            <div class="swim">
+                <strong>${Utils.formatTime(swim.time)}</strong>
+                ${swim.marker ? `(${swim.marker})` : ""}
+                <br>
+                ${swim.meet}
+                <br>
+                <small>${Utils.formatDate(swim.date)}</small>
+            </div>
+        `).join("");
     },
 
     openImport() {
@@ -75,19 +80,16 @@ const UI = {
         if (!text) return;
 
         const swims = Parser.parseSwimCloud(text);
-        const event = EventManager.getCurrent();
 
         swims.forEach(swim => {
-            EventManager.addSwim(swim, event);
+            EventManager.addSwim(swim);
         });
 
         this.render();
     },
 
     openAddSwim() {
-        const time = prompt(
-            "Enter time:"
-        );
+        const time = prompt("Time:");
 
         if (!time) return;
 
@@ -97,9 +99,7 @@ const UI = {
 
         const date = prompt(
             "Date (YYYY-MM-DD):"
-        ) || new Date()
-            .toISOString()
-            .split("T")[0];
+        ) || Utils.getToday();
 
         EventManager.addSwim({
             time: Number(time),
